@@ -6,7 +6,7 @@
         <loading v-if="isLoading" />
 		<div v-else id="content" class="contentDetail">
 			<div class="detail_list">
-				<div class="detail_list_bg"></div>
+				<div class="detail_list_bg" :style="{'background-image': 'url('+detailMovie.img.replace(/w\.h/i,'148.208')+')'}"></div>
 				<div class="detail_list_filter"></div>
 				<div class="detail_list_content">
 					<div class="detail_list_img">
@@ -31,8 +31,6 @@
 						<div>
 							<img :src="item | setWH('148.240')" alt="">
 						</div>
-						<p>陈建斌</p>
-						<p>马先勇</p>
 					</li>
 				</ul>
 			</div>
