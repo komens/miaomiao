@@ -62,8 +62,8 @@ export default {
       });
    },
    methods:{
-      handleToDetail: function(){
-         console.log('ok')
+      handleToDetail: function(id){
+         this.$router.push('/movie/detail/1/' + id);
       },
       handleToScroll(pos){
          if(pos.y>30) {

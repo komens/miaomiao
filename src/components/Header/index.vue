@@ -1,6 +1,6 @@
 <template>
    <header id="header">
-       <h1>{{title}}</h1>
+       <slot></slot><h1>{{title}}</h1>
    </header>
 </template>
 
@@ -30,5 +30,12 @@ export default {
     text-align: center;
     line-height: 50px;
     font-weight: 400;
+}
+#header i {
+    float: left;
+    font-size: 18px;
+    padding-left: 10px;
+    text-align: left;
+    line-height: 50px;
 }
 </style>
