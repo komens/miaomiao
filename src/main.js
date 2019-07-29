@@ -8,8 +8,14 @@ Vue.prototype.axios = axios;
 
 //图片过滤器
 Vue.filter('setWH', (url,arg)=>{
-  return url.replace(/w\.h/,arg);
-})
+  return url.replace(/w\.h/,arg)
+});
+
+//全局组件
+import Scroller from '@/components/Scroller'
+Vue.component('Scroller', Scroller)
+import Loading from '@/components/Loading'
+Vue.component('Loading',Loading)
 
 Vue.config.productionTip = false
 

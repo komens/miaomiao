@@ -1,23 +1,26 @@
 <template>
    <div class="cinema_body">
-        <ul>
-            <li v-for="item in cinemaList" :key="item.id">
-                <div>
-                    <span>{{item.nm}}</span>
-                    <span class="q"><span class="price">{{item.sellPrice}}</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>{{item.addr}}</span>
-                    <span>{{item.distance}}</span>
-                </div>
-                <div class="card">
-                    <div v-for="(num,key) in item.tag"
-                            :key="key"
-                            v-if="num===1"
-                            :class="key | classCard">{{key | formatCard}}</div>
-                </div>
-            </li>
-        </ul>
+       <loading v-if="isLoading" />
+        <scroller v-else>
+            <ul>
+                <li v-for="item in cinemaList" :key="item.id">
+                    <div>
+                        <span>{{item.nm}}</span>
+                        <span class="q"><span class="price">{{item.sellPrice}}</span> 元起</span>
+                    </div>
+                    <div class="address">
+                        <span>{{item.addr}}</span>
+                        <span>{{item.distance}}</span>
+                    </div>
+                    <div class="card">
+                        <div v-for="(num,key) in item.tag"
+                                :key="key"
+                                v-if="num===1"
+                                :class="key | classCard">{{key | formatCard}}</div>
+                    </div>
+                </li>
+            </ul>
+        </scroller>
     </div>
 </template>
 
@@ -26,14 +29,22 @@ export default {
     name: 'CiList',
     data(){
         return {
-            cinemaList:[]
+            cinemaList:[],
+            isLoading: true,
+            prevCityId: -1
         }
     },
-    mounted(){
-        this.axios.get('/api/cinemaList?cityId=50').then(res=>{
+    activated(){
+        var cityId = this.$store.state.city.id;
+        if(this.prevCityId === cityId) {
+            return;
+        }
+        this.isLoading = true;
+        this.axios.get('/api/cinemaList?cityId='+cityId).then(res=>{
             var msg = res.data.msg;
             if(msg === 'ok') {
                 this.cinemaList = res.data.data.cinemas;
+                this.isLoading = false
             }
         })
     },
@@ -71,7 +82,7 @@ export default {
 </script>
 
 <style scoped>
-#content .cinema_body{ flex:1; overflow:auto;}
+.cinema_body{ flex:1; overflow:auto;height: calc(100vh - 107px);}
 .cinema_body ul{ padding:20px;}
 .cinema_body li{  border-bottom:1px solid #e6e6e6; margin-bottom: 20px;}
 .cinema_body div{ margin-bottom: 10px;}

@@ -8,17 +8,22 @@
       </div>
       <div class="search_result">
          <h3>电影/电视剧/综艺</h3>
-         <ul>
-            <li v-for="item in moviesList" :key="item.id">
-               <div class="img"><img :src="item.img | setWH('128.180')"></div>
-               <div class="info">
-                  <p><span>{{item.nm}}</span><span>{{item.sc}}</span></p>
-                  <p>{{item.nm}}</p>
-                  <p>{{item.cat}}</p>
-                  <p>{{item.pubDes}}</p>
-               </div>
-            </li>
-         </ul>
+         <div class="result-wrapper">
+            <loading v-if="isLoading" />
+            <scroller v-else>
+               <ul>
+                  <li v-for="item in moviesList" :key="item.id">
+                     <div class="img"><img :src="item.img | setWH('128.180')"></div>
+                     <div class="info">
+                        <p><span>{{item.nm}}</span><span>{{item.sc}}</span></p>
+                        <p>{{item.nm}}</p>
+                        <p>{{item.cat}}</p>
+                        <p>{{item.pubDes}}</p>
+                     </div>
+                  </li>
+               </ul>
+            </scroller>
+         </div>
       </div>
    </div>
 </template>
@@ -30,14 +35,17 @@ export default {
    data(){
       return {
          message:'',
-         moviesList:[]
+         moviesList:[],
+         isLoading: false
       }
    },
    watch: {
       message(newVal) {
          var that = this;
+         var cityId = this.$store.city.id;
          this.cancelRequest();
-         this.axios.get('/api/searchList?cityId=10&kw='+newVal,{
+         this.isLoading = true;
+         this.axios.get('/api/searchList?cityId='+cityId+'&kw='+newVal,{
             cancelToken: new this.axios.CancelToken(function(c) {
                that.source = c;
             })
@@ -46,6 +54,7 @@ export default {
             var movies = res.data.data.movies;
             if(msg && movies) {
                this.moviesList = movies.list;
+               this.isLoading = false;
             }
          }).catch((err) => {
                if (axios.isCancel(err)) {
@@ -73,6 +82,7 @@ export default {
 .search_body .search_input_wrapper{ padding: 0 10px; border: 1px solid #e6e6e6; border-radius: 5px; background-color: #fff; display: flex; line-height: 20px;}
 .search_body .search_input_wrapper i{font-size: 16px; padding: 4px 0;}
 .search_body .search_input_wrapper input{ border: none; font-size: 13px; color: #333; padding: 4px 0; outline: none; margin-left: 5px; width:100%;}
+.search_body .search_result .result-wrapper {overflow: hidden;height: calc(100vh - 230px);}
 .search_body .search_result h3{ font-size: 15px; color: #999; padding: 9px 15px; border-bottom: 1px solid #e6e6e6;}
 .search_body .search_result li{ border-bottom:1px #c9c9c9 dashed; padding: 10px 15px; box-sizing:border-box; display: flex;}
 .search_body .search_result .img{ width: 60px; float:left; }
